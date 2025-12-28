@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+  /* 1. Fix: Use the correct dark mode selector strategy for v4 */
+  --selector-dark: .dark;
+
+  /* 2. Combined Theme Variables */
+  --color-brand-primary: var(--color-indigo-600);
+  --color-brand-dark: var(--color-zinc-950);
+  
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+
+  /* Custom Animations for your Loader/Cards */
+  --animate-float: float 3s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 3. Fix: Ensure base colors apply correctly to the root */
+  body {
+    @apply bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-300;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* 4. Professional Scrollbar Styling */
+@layer utilities {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-zinc-200 dark:bg-zinc-800 rounded-full border-2 border-transparent bg-clip-content;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-zinc-400 dark:bg-zinc-600;
+  }
+}
