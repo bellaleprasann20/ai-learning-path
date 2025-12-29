@@ -10,10 +10,10 @@ const Home = () => {
   const [roadmap, setRoadmap] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Debugging: Monitor state changes in the console
+  // Debugging: Monitor state changes
   useEffect(() => {
     if (roadmap) {
-      console.log("📍 Roadmap state updated:", roadmap);
+      console.log("📍 Frontend Received Roadmap:", roadmap);
     }
   }, [roadmap]);
 
@@ -22,12 +22,11 @@ const Home = () => {
       <Navbar />
 
       <main className="relative overflow-hidden">
-        {/* Decorative Background Elements */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[500px] bg-gradient-to-b from-indigo-50/50 dark:from-indigo-950/20 to-transparent -z-10" />
         
         <div className="max-w-6xl mx-auto px-6 py-12 md:py-20">
           
-          {/* 1. Hero Section - Only show when no roadmap and not loading */}
+          {/* 1. Hero Section */}
           <AnimatePresence mode="wait">
             {!roadmap && !loading && (
               <motion.div 
@@ -70,7 +69,9 @@ const Home = () => {
                 className="py-20"
               >
                 <Loader />
-                <p className="text-center mt-4 text-zinc-500 animate-pulse">Designing your curriculum...</p>
+                <p className="text-center mt-4 text-zinc-500 animate-pulse font-medium">
+                  AI is crafting your personalized curriculum...
+                </p>
               </motion.div>
             )}
           </AnimatePresence>
@@ -85,23 +86,16 @@ const Home = () => {
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
               >
-                <button 
-                  onClick={() => setRoadmap(null)}
-                  className="mb-8 flex items-center gap-2 text-sm font-medium text-zinc-500 hover:text-indigo-600 transition-colors group"
-                >
-                  <ArrowRight className="rotate-180 transition-transform group-hover:-translate-x-1" size={16} />
-                  Generate a different path
-                </button>
-                
-                {/* IMPORTANT: Verify if your Roadmap component expects 
-                  'roadmap={roadmap}' or 'data={roadmap}' 
-                */}
-                <Roadmap roadmap={roadmap} />
+                {/* Fixed the Roadmap component by adding the missing onBack prop */}
+                <Roadmap 
+                    roadmap={roadmap} 
+                    onBack={() => setRoadmap(null)} 
+                />
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* 5. Feature Grid - Only show on Landing */}
+          {/* 5. Feature Grid */}
           {!roadmap && !loading && (
             <motion.div 
               initial={{ opacity: 0 }}
@@ -130,7 +124,7 @@ const Home = () => {
       </main>
 
       <footer className="py-12 text-center text-zinc-500 text-xs border-t border-zinc-100 dark:border-zinc-900">
-        © 2024 AI Learning Path. Built for the future of education.
+        © 2025 AI Learning Path. Built for the future of education.
       </footer>
     </div>
   );
