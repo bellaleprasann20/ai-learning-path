@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "../components/Navbar";
 import LearningForm from "../components/LearningForm";
@@ -10,6 +10,13 @@ const Home = () => {
   const [roadmap, setRoadmap] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Debugging: Monitor state changes in the console
+  useEffect(() => {
+    if (roadmap) {
+      console.log("📍 Roadmap state updated:", roadmap);
+    }
+  }, [roadmap]);
+
   return (
     <div className="min-h-screen bg-[#fafafa] dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
       <Navbar />
@@ -20,23 +27,20 @@ const Home = () => {
         
         <div className="max-w-6xl mx-auto px-6 py-12 md:py-20">
           
-          {/* 1. Hero Section - Hide when roadmap exists to focus on content */}
-          <AnimatePresence>
+          {/* 1. Hero Section - Only show when no roadmap and not loading */}
+          <AnimatePresence mode="wait">
             {!roadmap && !loading && (
               <motion.div 
+                key="hero"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 className="text-center mb-16"
               >
-                <motion.div 
-                  initial={{ scale: 0.9 }}
-                  animate={{ scale: 1 }}
-                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-xs font-bold mb-6 border border-indigo-100 dark:border-indigo-800"
-                >
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-xs font-bold mb-6 border border-indigo-100 dark:border-indigo-800">
                   <Sparkles size={14} />
                   <span>Next-Gen AI Learning Planner</span>
-                </motion.div>
+                </div>
                 
                 <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-6 bg-gradient-to-b from-zinc-900 to-zinc-600 dark:from-white dark:to-zinc-500 bg-clip-text text-transparent">
                   Master Any Skill <br /> In Record Time.
@@ -49,42 +53,49 @@ const Home = () => {
           </AnimatePresence>
 
           {/* 2. Form Section */}
-          <section className="relative z-10">
+          <div className="relative z-10">
             {!roadmap && !loading && (
               <LearningForm setRoadmap={setRoadmap} setLoading={setLoading} />
             )}
-          </section>
+          </div>
 
           {/* 3. Loading State */}
-          <AnimatePresence>
+          <AnimatePresence mode="wait">
             {loading && (
               <motion.div 
+                key="loader"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 className="py-20"
               >
                 <Loader />
+                <p className="text-center mt-4 text-zinc-500 animate-pulse">Designing your curriculum...</p>
               </motion.div>
             )}
           </AnimatePresence>
 
           {/* 4. Roadmap Result Section */}
-          <AnimatePresence>
+          <AnimatePresence mode="wait">
             {roadmap && !loading && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
+                key="roadmap-results"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
               >
-                {/* Back Button for better UX */}
                 <button 
                   onClick={() => setRoadmap(null)}
-                  className="mb-8 flex items-center gap-2 text-sm font-medium text-zinc-500 hover:text-indigo-600 transition-colors"
+                  className="mb-8 flex items-center gap-2 text-sm font-medium text-zinc-500 hover:text-indigo-600 transition-colors group"
                 >
-                  <ArrowRight className="rotate-180" size={16} />
+                  <ArrowRight className="rotate-180 transition-transform group-hover:-translate-x-1" size={16} />
                   Generate a different path
                 </button>
+                
+                {/* IMPORTANT: Verify if your Roadmap component expects 
+                  'roadmap={roadmap}' or 'data={roadmap}' 
+                */}
                 <Roadmap roadmap={roadmap} />
               </motion.div>
             )}
